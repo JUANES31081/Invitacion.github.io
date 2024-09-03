@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invitación a Almuerzo de Aniversario</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            max-width: 500px;
+            width: 90%;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 40px rgba(31, 38, 135, 0.5);
+        }
+        h1, h2 {
+            font-family: 'Playfair Display', serif;
+        }
+        .border-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='52' height='26' viewBox='0 0 52 26' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ddd' fill-opacity='0.4'%3E%3Cpath d='M10 10c0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2c0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4v2c-3.314 0-6-2.686-6-6 0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6zm25.464-1.95l8.486 8.486-1.414 1.414-8.486-8.486 1.414-1.414z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            height: 20px;
+            opacity: 0.3;
+        }
+        .menu-item {
+            border-bottom: 1px dashed #ccc;
+            padding-bottom: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+        .sparkle {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: sparkle 1.5s infinite;
+            z-index: -1;
+        }
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+        .heart {
+            display: inline-block;
+            color: #ff4b4b;
+            animation: heartbeat 1.5s infinite;
+        }
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+    </style>
+</head>
+<body class="font-sans">
+    <div class="card p-8">
+        <div class="border-pattern mb-6"></div>
+        <h1 class="text-4xl font-bold text-center mb-4 animate__animated animate__fadeInDown">Celebración de Amor</h1>
+        <h2 class="text-2xl italic text-center mb-6 animate__animated animate__fadeIn animate__delay-1s">2 Años y 6 Meses Juntos <span class="heart">&hearts;</span></h2>
+        
+        <p class="text-xl text-center mb-8 animate__animated animate__fadeIn animate__delay-1s">Con gran alegría te invito a compartir un almuerzo especial para conmemorar nuestro amor</p>
+        
+        <div class="text-center mb-8 animate__animated animate__fadeInUp animate__delay-2s">
+            <p class="text-lg mb-2"><strong>Fecha:</strong> 7 de Septiembre, 2024</p>
+            <p class="text-lg mb-2"><strong>Hora:</strong> 11:00 AM</p>
+            <p class="text-lg mb-4"><strong>Lugar:</strong> Por definir pero sera un lugar especial, Ciudad</p>
+            <p class="text-sm italic">Dress code: Elegante casual</p>
+        </div>
+
+        <div class="mb-8">
+            <h3 class="text-xl font-semibold mb-4 text-center">Menú Especial</h3>
+            <div class="menu-item"><strong>Entrada</strong> </div>
+            <div class="menu-item"><strong>Plato Principal</strong> </div>
+            <div class="menu-item"><strong>Postre</strong> </div>
+        </div>
+        
+        <div class="flex justify-center mb-8">
+            <button id="rsvpBtn" class="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105 animate__animated animate__pulse animate__infinite">
+                Confirmar Asistencia
+            </button>
+        </div>
+
+        <p class="text-center text-sm italic">Por favor, confirma tu asistencia antes del Viernes 6 de Agosto</p>
+        <div class="border-pattern mt-6"></div>
+    </div>
+
+    <script>
+        // Agregar destellos
+        for (let i = 0; i < 50; i++) {
+            const sparkle = document.createElement('div');
+            sparkle.classList.add('sparkle');
+            sparkle.style.width = `${Math.random() * 5 + 2}px`;
+            sparkle.style.height = sparkle.style.width;
+            sparkle.style.left = `${Math.random() * 100}%`;
+            sparkle.style.top = `${Math.random() * 100}%`;
+            sparkle.style.animationDelay = `${Math.random() * 2}s`;
+            document.body.appendChild(sparkle);
+        }
+
+        // Animación del botón RSVP
+        const rsvpBtn = document.getElementById('rsvpBtn');
+        rsvpBtn.addEventListener('mouseover', () => {
+            gsap.to(rsvpBtn, {duration: 0.3, scale: 1.1, ease: "power1.out"});
+        });
+        rsvpBtn.addEventListener('mouseout', () => {
+            gsap.to(rsvpBtn, {duration: 0.3, scale: 1, ease: "power1.out"});
+        });
+        rsvpBtn.addEventListener('click', () => {
+            gsap.to(rsvpBtn, {
+                duration: 0.1,
+                scale: 0.9,
+                yoyo: true,
+                repeat: 1,
+                onComplete: () => {
+                    const name = prompt('Por favor, ingresa tu nombre:');
+                    if (name) {
+                        alert(`¡Gracias por confirmar tu asistencia, ${name}! Esperamos verte en nuestra celebración.`);
+                    }
+                }
+            });
+        });
+
+        // Animación de entrada
+        gsap.from(".card", {duration: 1, y: 50, opacity: 0, ease: "power3.out"});
+    </script>
+</body>
+</html>
