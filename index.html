@@ -4,10 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invitación a Almuerzo de Aniversario</title>
+    <!-- Tailwind CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <!-- Animate.css -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <!-- GSAP -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- QRCode.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-sA+e2QWX6bF1tNnROblMN7awI8IyMZKQ3N6W64NxwXQ="
+        crossorigin=""/>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-o9N1jzLZT+gq6G4qjJoPc/JYbL9Xl0GfDk+vN3yxz58="
+        crossorigin=""></script>
     <style>
         body {
             background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
@@ -16,6 +30,8 @@
             justify-content: center;
             align-items: center;
             font-family: 'Montserrat', sans-serif;
+            position: relative;
+            overflow: hidden;
         }
         .card {
             background: rgba(255, 255, 255, 0.95);
@@ -24,8 +40,10 @@
             box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
             overflow: hidden;
             transition: all 0.3s ease;
-            max-width: 500px;
+            max-width: 600px;
             width: 90%;
+            position: relative;
+            z-index: 1;
         }
         .card:hover {
             transform: translateY(-10px);
@@ -35,7 +53,7 @@
             font-family: 'Playfair Display', serif;
         }
         .border-pattern {
-            background-image: url("data:image/svg+xml,%3Csvg width='52' height='26' viewBox='0 0 52 26' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ddd' fill-opacity='0.4'%3E%3Cpath d='M10 10c0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2c0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4v2c-3.314 0-6-2.686-6-6 0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6zm25.464-1.95l8.486 8.486-1.414 1.414-8.486-8.486 1.414-1.414z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg width='52' height='26' viewBox='0 0 52 26' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ddd' fill-opacity='0.4'%3E%3Cpath d='M10 10c0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2c0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4v2c-3.314 0-6-2.686-6-6 0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6zm25.464-1.95l8.486 8.486-1.414 1.414-8.486-8.486 1.414-1.414z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
             height: 20px;
             opacity: 0.3;
         }
@@ -52,7 +70,7 @@
             background: white;
             border-radius: 50%;
             animation: sparkle 1.5s infinite;
-            z-index: -1;
+            z-index: 0;
         }
         @keyframes sparkle {
             0%, 100% { opacity: 0; transform: scale(0); }
@@ -67,6 +85,17 @@
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.1); }
         }
+        #map {
+            height: 200px;
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+        .qr-codes {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 2rem;
+        }
     </style>
 </head>
 <body class="font-sans">
@@ -75,70 +104,72 @@
         <h1 class="text-4xl font-bold text-center mb-4 animate__animated animate__fadeInDown">Celebración de Amor</h1>
         <h2 class="text-2xl italic text-center mb-6 animate__animated animate__fadeIn animate__delay-1s">2 Años y 6 Meses Juntos <span class="heart">&hearts;</span></h2>
         
-        <p class="text-xl text-center mb-8 animate__animated animate__fadeIn animate__delay-1s">Con gran alegría te invito a compartir un almuerzo especial para conmemorar nuestro amor</p>
+        <p class="text-xl text-center mb-8 animate__animated animate__fadeIn animate__delay-1s">Te invitamos a un almuerzo especial para conmemorar nuestro amor en uno de estos dos restaurantes</p>
         
         <div class="text-center mb-8 animate__animated animate__fadeInUp animate__delay-2s">
-            <p class="text-lg mb-2"><strong>Fecha:</strong> 7 de Septiembre, 2024</p>
-            <p class="text-lg mb-2"><strong>Hora:</strong> 11:00 AM</p>
-            <p class="text-lg mb-4"><strong>Lugar:</strong> Por definir pero sera un lugar especial, Ciudad</p>
+            <p class="text-lg mb-2"><strong>Opción 1:</strong> Restaurante "Aliento de Dragón"</p>
+            <p class="text-lg mb-2"><strong>Opción 2:</strong> Restaurante "Malaflor"</p>
+            <div id="map" class="mb-4"></div>
             <p class="text-sm italic">Dress code: Elegante casual</p>
         </div>
 
-        <div class="mb-8">
-            <h3 class="text-xl font-semibold mb-4 text-center">Menú Especial</h3>
-            <div class="menu-item"><strong>Entrada</strong> </div>
-            <div class="menu-item"><strong>Plato Principal</strong> </div>
-            <div class="menu-item"><strong>Postre</strong> </div>
-        </div>
-        
-        <div class="flex justify-center mb-8">
-            <button id="rsvpBtn" class="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105 animate__animated animate__pulse animate__infinite">
-                Confirmar Asistencia
-            </button>
+        <div class="qr-codes">
+            <!-- QR para Aliento de Dragón -->
+            <div id="qrcodeDragon"></div>
+
+            <!-- QR para Malaflor -->
+            <div id="qrcodeMalaflor"></div>
         </div>
 
-        <p class="text-center text-sm italic">Por favor, confirma tu asistencia antes del Viernes 6 de Agosto</p>
+        <div class="flex justify-center gap-4 mb-8">
+            <a href="https://www.instagram.com/lamadrigueradeldragon/?hl=es" target="_blank" class="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105">Ver Menú Aliento de Dragón</a>
+            <a href="https://www.malaflor.co/carta" target="_blank" class="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105">Ver Menú Malaflor</a>
+        </div>
+
+        <div class="flex justify-center">
+            <button id="rsvpBtn" class="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105">Confirmar Asistencia</button>
+        </div>
+
         <div class="border-pattern mt-6"></div>
     </div>
 
     <script>
-        // Agregar destellos
-        for (let i = 0; i < 50; i++) {
-            const sparkle = document.createElement('div');
-            sparkle.classList.add('sparkle');
-            sparkle.style.width = `${Math.random() * 5 + 2}px`;
-            sparkle.style.height = sparkle.style.width;
-            sparkle.style.left = `${Math.random() * 100}%`;
-            sparkle.style.top = `${Math.random() * 100}%`;
-            sparkle.style.animationDelay = `${Math.random() * 2}s`;
-            document.body.appendChild(sparkle);
+        // Inicialización de los QR codes
+        new QRCode(document.getElementById("qrcodeDragon"), {
+            text: "https://www.instagram.com/lamadrigueradeldragon/?hl=es",
+            width: 128,
+            height: 128
+        });
+
+        new QRCode(document.getElementById("qrcodeMalaflor"), {
+            text: "https://www.malaflor.co/carta",
+            width: 128,
+            height: 128
+        });
+
+        // Inicialización del mapa de Leaflet
+        function initMap() {
+            var map = L.map('map').setView([4.7110, -74.0721], 13); // Coordenadas de Bogotá, ajustar según la ubicación
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            // Marcadores de los restaurantes
+            var marker1 = L.marker([4.7110, -74.0721]).addTo(map).bindPopup('Restaurante Aliento de Dragón');
+            var marker2 = L.marker([4.7090, -74.0731]).addTo(map).bindPopup('Restaurante Malaflor');
         }
 
-        // Animación del botón RSVP
-        const rsvpBtn = document.getElementById('rsvpBtn');
-        rsvpBtn.addEventListener('mouseover', () => {
-            gsap.to(rsvpBtn, {duration: 0.3, scale: 1.1, ease: "power1.out"});
-        });
-        rsvpBtn.addEventListener('mouseout', () => {
-            gsap.to(rsvpBtn, {duration: 0.3, scale: 1, ease: "power1.out"});
-        });
-        rsvpBtn.addEventListener('click', () => {
-            gsap.to(rsvpBtn, {
-                duration: 0.1,
-                scale: 0.9,
-                yoyo: true,
-                repeat: 1,
-                onComplete: () => {
-                    const name = prompt('Por favor, ingresa tu nombre:');
-                    if (name) {
-                        alert(`¡Gracias por confirmar tu asistencia, ${name}! Esperamos verte en nuestra celebración.`);
-                    }
-                }
-            });
-        });
+        // Llamada a la función del mapa
+        window.onload = function() {
+            initMap();
+        };
 
-        // Animación de entrada
-        gsap.from(".card", {duration: 1, y: 50, opacity: 0, ease: "power3.out"});
+        // Funcionalidad del botón de RSVP
+        document.getElementById('rsvpBtn').onclick = function() {
+            alert('¡Gracias por confirmar tu asistencia!');
+        };
     </script>
 </body>
 </html>
